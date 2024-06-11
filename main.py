@@ -13,7 +13,7 @@ from middleware.verifyToken import token_required
 import requests
 from dotenv import load_dotenv
 from firebaseConfig.firebase import initialize_firestore
-from historyService.history import create_history_entry
+from historyService.history import create_history_entry, get_histories, get_history_by_id, delete_history_by_id, delete_all_histories
 
 load_dotenv()
 
@@ -51,7 +51,7 @@ def index():
     image_url = save_image_to_gcs(image_bytes, file.filename, user_id)
 
     # Create history entry
-    create_history_entry(db, user_id, datetime.utcnow().isoformat() + 'Z', image_url)
+    create_history_entry(db, user_id, datetime.utcnow().isoformat() + 'Z', image_url, pred_img)
     
     return jsonify({"prediction": pred_img, "user_id": user_id, "image_url": image_url}), 200
 
@@ -81,12 +81,13 @@ def save_image_to_gcs(image_bytes, filename, user_id):
         blob.upload_from_string('')
 
     # Generate the unique filename prefix
-    prefix = 1
+    suffix = 1
+    base_name, extension = os.path.splitext(filename)
     while True:
-        unique_filename = f"{folder_path}{prefix}_{filename}"
+        unique_filename = f"{folder_path}{base_name}_{suffix}{extension}"
         if not bucket.blob(unique_filename).exists():
             break
-        prefix += 1
+        suffix += 1
     
     # Create a blob object
     blob = bucket.blob(unique_filename)
@@ -98,6 +99,13 @@ def save_image_to_gcs(image_bytes, filename, user_id):
     blob.make_public()
     
     return blob.public_url
+
+# Route for get
+app.route('/predict/histories', methods=['GET'])(token_required(get_histories))
+app.route('/predict/histories/<history_id>', methods=['GET'])(token_required(get_history_by_id))
+# Route for delete
+app.route('/predict/histories', methods=['DELETE'])(token_required(delete_all_histories))
+app.route('/predict/histories/<history_id>', methods=['DELETE'])(token_required(delete_history_by_id))
 
 if __name__ == "__main__":
     app.run(debug=True)
