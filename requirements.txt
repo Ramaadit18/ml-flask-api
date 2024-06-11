@@ -1,0 +1,9 @@
+Flask
+gunicorn
+tensorflow==2.15.0
+numpy
+pillow
+python-dotenv
+google-cloud-storage
+pyjwt
+firebase-admin
