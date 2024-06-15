@@ -1,0 +1,5 @@
+__pycache__
+.env
+Dockerfile
+service-account-firebase.json
+service-account-pest-sentry.json
