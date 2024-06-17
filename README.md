@@ -6,6 +6,24 @@ Token created and signed using JWT and contains the user_id as the payload
 
 ## Predict
 
+### Create Disease Prediction
+- Method: `POST`
+- Path: `/predict/disease`
+- Description: Predict the image sent by User.
+- Request Header: <br>
+  Key   : Authorization <br>
+  Value : (token)
+- Request Body: Image sent in form-data 
+- Response Body:
+  
+  ```json
+  {
+    "image_url": "<image_url>",
+    "prediction": "<prediction>",
+    "user_id": "<user_id>"
+  }
+  ```
+
 ### Create Prediction
 - Method: `POST`
 - Path: `/predict`
