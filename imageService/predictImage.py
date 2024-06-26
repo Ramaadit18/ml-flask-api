@@ -39,7 +39,7 @@ def predict_pest(img):
     pred = model_pest.predict(x)
     max_prediction_score = np.max(pred)
     prediction_index = np.argmax(pred)
-    result = "Unknown" if max_prediction_score < 0.88 else pest_labels[prediction_index]
+    result = "Unknown" if max_prediction_score < 0.87 else pest_labels[prediction_index]
     return result
 
 def predict_disease(img):
@@ -47,5 +47,5 @@ def predict_disease(img):
     pred = model_disease.predict(x)
     max_prediction_score = np.max(pred)
     prediction_index = np.argmax(pred)
-    result = "Unknown" if max_prediction_score < 0.92 else disease_labels[prediction_index]
+    result = "Unknown" if max_prediction_score < 0.85 else disease_labels[prediction_index]
     return result
